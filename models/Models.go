@@ -19,6 +19,7 @@ type Event struct {
 	Title       string
 	Description string
 	Attendcount int
+	Location    string
 	Time        int
 	Club        string
 	Lastmod     int

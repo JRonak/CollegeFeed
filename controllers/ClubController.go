@@ -12,11 +12,16 @@ type ClubController struct {
 	beego.Controller
 }
 
+type Response struct {
+	Clubs []models.Club
+}
+
 func (this *ClubController) Clubs() {
 	time, _ := strconv.Atoi(this.Ctx.Input.Param(":time"))
 	c := models.Club{}
 	clubs := c.GetByTime(time)
-	b, _ := json.Marshal(&clubs)
+	response := Response{clubs}
+	b, _ := json.Marshal(&response)
 	this.Data["json"] = string(b)
 	this.ServeJson()
 }

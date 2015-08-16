@@ -12,6 +12,10 @@ type EventController struct {
 	beego.Controller
 }
 
+type EventResponse struct {
+	Events []models.Event
+}
+
 var (
 	failjson string
 	passjson string
@@ -37,10 +41,14 @@ func (this *EventController) Create() {
 	title := this.GetString("title")
 	description := this.GetString("description")
 	t := this.GetString("time")
+	club := this.GetString("club")
+	location := this.GetString("location")
 	lastmod := int(time.Now().Unix())
 	event := models.Event{}
 	event.Title = title
 	event.Description = description
+	event.Club = club
+	event.Location = location
 	tim, _ := strconv.Atoi(t)
 	event.Time = tim
 	event.Lastmod = lastmod
@@ -66,10 +74,14 @@ func (this *EventController) Update() {
 	title := this.GetString("title")
 	description := this.GetString("description")
 	t := this.GetString("time")
+	club := this.GetString("club")
+	location := this.GetString("location")
 	lastmod := int(time.Now().Unix())
 	event := models.Event{}
 	event.Title = title
 	event.Description = description
+	event.Club = club
+	event.Location = location
 	tim, _ := strconv.Atoi(t)
 	event.Time = tim
 	event.Lastmod = lastmod
@@ -88,7 +100,8 @@ func (this *EventController) Events() {
 	time, _ := strconv.Atoi(this.Ctx.Input.Param(":time"))
 	t := models.Event{}
 	ts := t.GetAfter(time)
-	b, _ := json.Marshal(&ts)
+	response := EventResponse{ts}
+	b, _ := json.Marshal(&response)
 	this.Data["json"] = string(b)
 	this.ServeJson()
 }
@@ -112,5 +125,6 @@ func (this *EventController) Attending() {
 	t := models.Event{}
 	t.Id = id
 	t.AddAttend()
+	this.Data["json"] = passjson
 	this.ServeJson()
 }
